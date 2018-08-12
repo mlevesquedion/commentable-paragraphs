@@ -1,0 +1,481 @@
+var _user$project$Main$updateParagraph = F4(
+	function (posts, postId, paragraphId, func) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (post) {
+				var newParagraphs = _elm_lang$core$Native_Utils.eq(post.id, postId) ? A2(
+					_elm_lang$core$List$map,
+					function (paragraph) {
+						return _elm_lang$core$Native_Utils.eq(paragraph.id, paragraphId) ? func(paragraph) : paragraph;
+					},
+					post.paragraphs) : post.paragraphs;
+				return _elm_lang$core$Native_Utils.update(
+					post,
+					{paragraphs: newParagraphs});
+			},
+			posts);
+	});
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'ToggleAllComments':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{showComments: !model.showComments});
+			case 'ToggleComments':
+				var newPosts = A4(
+					_user$project$Main$updateParagraph,
+					model.posts,
+					_p0._0,
+					_p0._1,
+					function (paragraph) {
+						return _elm_lang$core$Native_Utils.update(
+							paragraph,
+							{open: !paragraph.open});
+					});
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{posts: newPosts});
+			case 'UpdateCurrentComment':
+				var newPosts = A4(
+					_user$project$Main$updateParagraph,
+					model.posts,
+					_p0._0,
+					_p0._1,
+					function (paragraph) {
+						return _elm_lang$core$Native_Utils.update(
+							paragraph,
+							{currentComment: _p0._2});
+					});
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{posts: newPosts});
+			case 'CreateComment':
+				var newPosts = A4(
+					_user$project$Main$updateParagraph,
+					model.posts,
+					_p0._0,
+					_p0._1,
+					function (paragraph) {
+						return _elm_lang$core$Native_Utils.update(
+							paragraph,
+							{
+								comments: A2(
+									_elm_lang$core$Basics_ops['++'],
+									paragraph.comments,
+									{
+										ctor: '::',
+										_0: {author: _p0._2, content: _p0._3},
+										_1: {ctor: '[]'}
+									}),
+								currentComment: ''
+							});
+					});
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{posts: newPosts});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{commenterName: _p0._0});
+		}
+	});
+var _user$project$Main$viewComment = function (comment) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$li,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$h5,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled$text(comment.author),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$span,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text(comment.content),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$viewComments = function (comments) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$ul,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _user$project$Main$viewComment, comments));
+};
+var _user$project$Main$maxHighlighting = 5;
+var _user$project$Main$highlighting = function (level) {
+	var transparency = _elm_lang$core$Basics$toFloat(
+		A2(_elm_lang$core$Basics$min, level, _user$project$Main$maxHighlighting));
+	return A4(_rtfeldman$elm_css$Css$rgba, 255, 255, 0, transparency * 0.2);
+};
+var _user$project$Main$posts = {
+	ctor: '::',
+	_0: {
+		id: 1,
+		title: 'Cats are awesome',
+		paragraphs: {
+			ctor: '::',
+			_0: {
+				id: 1,
+				content: 'The domestic cat (Felis silvestris catus or Felis catus) is a small, typically furry, carnivorous mammal. They are often called house cats when kept as indoor pets or simply cats when there is no need to distinguish them from other felids and felines. They are often valued by humans for companionship and for their ability to hunt vermin.',
+				comments: {ctor: '[]'},
+				currentComment: 'Personally, I...',
+				open: true
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					id: 2,
+					content: 'There are more than seventy cat breeds recognized by various cat registries.',
+					comments: {
+						ctor: '::',
+						_0: {author: 'Mr. Cat', content: 'I have to disagree. I believe there are at least three.'},
+						_1: {ctor: '[]'}
+					},
+					currentComment: '',
+					open: false
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						id: 3,
+						content: 'Thanks to Wikipedia for this article: https://en.wikipedia.org/wiki/Cat',
+						comments: {ctor: '[]'},
+						currentComment: '',
+						open: false
+					},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	},
+	_1: {
+		ctor: '::',
+		_0: {
+			id: 2,
+			title: 'My first post',
+			paragraphs: {
+				ctor: '::',
+				_0: {
+					id: 1,
+					content: 'Hey guys. This is my first post. Just checking out this new on-paragraph comments feature.',
+					comments: {
+						ctor: '::',
+						_0: {author: 'Me', content: 'This is pretty neat!'},
+						_1: {
+							ctor: '::',
+							_0: {author: 'Me', content: 'Yep, very neat indeed.'},
+							_1: {ctor: '[]'}
+						}
+					},
+					currentComment: '',
+					open: false
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						id: 2,
+						content: 'This is a paragraph. Neat.',
+						comments: {
+							ctor: '::',
+							_0: {author: 'A', content: '1'},
+							_1: {
+								ctor: '::',
+								_0: {author: 'B', content: '2'},
+								_1: {
+									ctor: '::',
+									_0: {author: 'C', content: '3'},
+									_1: {
+										ctor: '::',
+										_0: {author: 'This is', content: 'just to show that the highlighting increases based on the number of comments.'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						currentComment: '',
+						open: false
+					},
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		_1: {ctor: '[]'}
+	}
+};
+var _user$project$Main$init = {commenterName: '', posts: _user$project$Main$posts, showComments: true};
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {commenterName: a, posts: b, showComments: c};
+	});
+var _user$project$Main$Post = F3(
+	function (a, b, c) {
+		return {id: a, title: b, paragraphs: c};
+	});
+var _user$project$Main$Paragraph = F5(
+	function (a, b, c, d, e) {
+		return {id: a, content: b, comments: c, currentComment: d, open: e};
+	});
+var _user$project$Main$Comment = F2(
+	function (a, b) {
+		return {author: a, content: b};
+	});
+var _user$project$Main$ToggleAllComments = {ctor: 'ToggleAllComments'};
+var _user$project$Main$ToggleComments = F2(
+	function (a, b) {
+		return {ctor: 'ToggleComments', _0: a, _1: b};
+	});
+var _user$project$Main$CreateComment = F4(
+	function (a, b, c, d) {
+		return {ctor: 'CreateComment', _0: a, _1: b, _2: c, _3: d};
+	});
+var _user$project$Main$UpdateCurrentComment = F3(
+	function (a, b, c) {
+		return {ctor: 'UpdateCurrentComment', _0: a, _1: b, _2: c};
+	});
+var _user$project$Main$UpdateCommenterName = function (a) {
+	return {ctor: 'UpdateCommenterName', _0: a};
+};
+var _user$project$Main$viewCurrentComment = F4(
+	function (postId, paragraphId, author, content) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text('Your name: '),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Html_Styled$input,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(author),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_user$project$Main$UpdateCommenterName),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled$text('Your two cents: '),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_rtfeldman$elm_css$Html_Styled$input,
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(content),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(
+													A2(_user$project$Main$UpdateCurrentComment, postId, paragraphId)),
+												_1: {ctor: '[]'}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$button,
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
+								A4(_user$project$Main$CreateComment, postId, paragraphId, author, content)),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text('Submit'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Main$viewParagraph = F4(
+	function (showComments, commenterName, postId, paragraph) {
+		return showComments ? A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$p,
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$backgroundColor(
+									_user$project$Main$highlighting(
+										_elm_lang$core$List$length(paragraph.comments))),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$hover(
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$backgroundColor(
+												_user$project$Main$highlighting(_user$project$Main$maxHighlighting)),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$grab),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
+								A2(_user$project$Main$ToggleComments, postId, paragraph.id)),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text(paragraph.content),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: paragraph.open ? A2(
+						_rtfeldman$elm_css$Html_Styled$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _user$project$Main$viewComments(paragraph.comments),
+							_1: {
+								ctor: '::',
+								_0: A4(_user$project$Main$viewCurrentComment, postId, paragraph.id, commenterName, paragraph.currentComment),
+								_1: {ctor: '[]'}
+							}
+						}) : _rtfeldman$elm_css$Html_Styled$text(''),
+					_1: {ctor: '[]'}
+				}
+			}) : A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text(paragraph.content),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$viewPost = F3(
+	function (showComments, commenterName, post) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{ctor: '[]'},
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$h2,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text(post.title),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$List$map,
+					A3(_user$project$Main$viewParagraph, showComments, commenterName, post.id),
+					post.paragraphs)));
+	});
+var _user$project$Main$view = function (model) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$displayFlex,
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$spaceBetween),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Html_Styled$h1,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled$text('My awesome blog'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Html_Styled$button,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Main$ToggleAllComments),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled$text('Toggle comments'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$List$map,
+				A2(_user$project$Main$viewPost, model.showComments, model.commenterName),
+				model.posts)));
+};
+var _user$project$Main$main = _rtfeldman$elm_css$Html_Styled$beginnerProgram(
+	{model: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update})();
